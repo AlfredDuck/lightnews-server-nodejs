@@ -1,0 +1,97 @@
+/*公共*/
+*{
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+}
+body {
+  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: rgb(85, 85, 85);
+  background-color: #F7F7F7;
+}
+a {
+  color: #4fabd6;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+
+
+/* logo 图片 */
+
+#contain img {
+    margin-top: 100px;
+    width: 90px;
+    height: 90px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius:20px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#contain h1 {
+    display: block;
+    width: 200px;
+    font-size: 15px;
+    font-weight: lighter;
+    margin-top: 16px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+#contain h2 {
+    display: block;
+    width: 200px;
+    font-size: 12px;
+    font-weight: lighter;
+    color: #9F9F9F;
+    margin-top: 4px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+#contain a {
+    display: block;
+    width: 160px;
+    margin-top: 60px;
+    height: 30px;
+    line-height: 30px;
+    background-color: white;
+    border: 1px solid #dedede;
+    -moz-border-radius: 200px;      /* Gecko browsers */
+    -webkit-border-radius: 200px;   /* Webkit browsers */
+    border-radius:200px;            /* W3C syntax */
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+#contain p {
+    display: block;
+    width: 160px;
+    color: #9F9F9F;
+    margin-top: 10px;
+    height: 30px;
+    line-height: 30px;
+    background-color: white;
+    border: 1px solid #dedede;
+    -moz-border-radius: 200px;      /* Gecko browsers */
+    -webkit-border-radius: 200px;   /* Webkit browsers */
+    border-radius:200px;            /* W3C syntax */
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+

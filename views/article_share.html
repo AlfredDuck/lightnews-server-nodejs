@@ -1,0 +1,156 @@
+
+<% include header.html %>
+<div id="contain">
+
+
+
+<!-- 引导下载 -->
+<div id="download">
+    <a href="https://itunes.apple.com/us/app/xian-yu-xing-wen-hao-wan-you/id1084092765">
+        <img src="/images/80*80.png" alt="..."/>
+        <p id="title">咸鱼腥闻</p>
+        <p id="description">好玩、有品的娱乐新闻</p>
+        <p id="button">下载</p>
+    </a>
+</div>
+
+
+
+<!-- 标题 -->
+<div id="article_title_share">
+    <p><%= article_title %></p>
+</div>
+
+
+
+<!-- 作者 -->
+<div id="author">
+    <img src="<%= author_pic %>" alt="portrait"/>
+    <p id="name"><%= author_name %></p>
+    <p id="post_time"><%= post_time %></p>
+</div>
+
+
+
+<!-- 图文混排 -->
+<div id="content">
+    <%- article_text %>
+  <!--   <p> 最面瘫表演、最佳基侣、最不般配情侣、最抢镜配角……只要有趣，任何奖项都在考虑范畴，我们期待你的参与。</p>
+    <p>本着“看看电影、吐吐槽！”的活动精神，“特色奖项“已经成为鑫像奖不可</p>
+    <p><img src="http://letsfilm.org/wp-content/uploads/2016/01/3280050_3280050-R4-031-14_副本.jpg" alt="picture"/></p>
+    <p>本着“看看电影、吐吐槽！”的活动精神，“特色奖项“已经成为鑫像奖不可</p>
+    <p><img src="http://letsfilm.org/wp-content/uploads/2016/01/3280050_3280050-R4-011-4_副本.jpg" alt="picture"/></p>
+    <p>本着“看看电影、吐吐槽！”的活动精神，“特色奖项“已经成为鑫像奖不可或缺的一个单元。新一届鑫像奖的“特色奖项”名称正在火热征集中，豆友们快来为它注入新鲜的血液吧！</p> -->
+</div>
+
+
+
+
+<!-- 相关文章 -->
+<div id="related">
+    <p id="related_session">腥味相投</p>
+<!--     <div class="related_cell">
+        <a href="http://saltfish.news:8000/article_share?article_id=xxxxxxxxx">
+        <img src="http://letsfilm.org/wp-content/uploads/2014/06/734.jpg" alt="suggest"/>
+        <p class="related_title">喜欢背着相机四处晃荡，旅行和白日梦是人生的趣味，实现白日梦的学徒</p>
+        <p class="related_hot_degree">人气 23</p>
+        </a>
+    </div> -->
+
+    <!-- 循环模板哦 -->
+    <% related_articles.forEach(function(a){ %>
+        <div class="related_cell">
+            <a href="http://saltfish.news:8080/article_share?article_id=<%= a._id %>">
+                <img src="<%= a.picSmall %>" alt="suggest"/>
+                <p class="related_title"><%= a.title %></p>
+            <p class="related_hot_degree">人气&nbsp<%= a.pageView %></p>
+            </a>
+        </div>
+    <% }) %>
+
+</div>
+
+
+
+<!-- 免责声明 -->
+<p id="declare">- 本文内容来自网络，若不希望被转载，请与我们联系 -</p>
+
+</div>
+
+
+<script>
+$(document).ready(function(){
+    $('#download').bind('click', function(){
+        is_weixin();
+    });
+
+    // 获取window宽度
+    var width = $(window).width();
+
+    //
+    imgWidth = width - 30;
+    imgWidth = imgWidth + 'px';
+    console.log(imgWidth);
+    $('#content img').css('width', imgWidth);
+
+    //
+    downloadWidth = width;
+    downloadWidth = downloadWidth + 'px';
+    $('#download').css('width', downloadWidth);
+});
+
+function is_weixin(){
+    var ua = navigator.userAgent.toLowerCase(); 
+    if (ua.match(/MicroMessenger/i)=="micromessenger") {
+        alert('腥仔提示：微信不允许跳转到AppStore。复制此页面链接，在浏览器里打开就能下载哦');
+        return true;
+    } 
+    else if (ua.match(/WeiBo/i) == "weibo") {
+        alert('腥仔提示：新浪微博不允许跳转到AppStore。复制此页面链接，在浏览器里打开就能下载哦');
+        return true;
+    }
+    else {
+        // alert('不是微信里');
+        return false;
+    }
+}
+
+/*
+if (browser.versions.mobile) {//判断是否是移动设备打开。browser代码在下面
+        var ua = navigator.userAgent.toLowerCase();//获取判断用的对象
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                //在微信中打开
+        }
+        if (ua.match(/WeiBo/i) == "weibo") {
+                //在新浪微博客户端打开
+        }
+        if (ua.match(/QQ/i) == "qq") {
+                //在QQ空间打开
+        }
+        if (browser.versions.ios) {
+                //是否在IOS浏览器打开
+        } 
+        if(browser.versions.android){
+                //是否在安卓浏览器打开
+        }
+} else {
+        //否则就是PC浏览器打开
+}
+*/
+
+
+</script>
+
+<% include footer.html %>
+
+
+
+
+
+
+
+
+
+
+
+

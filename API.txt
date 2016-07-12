@@ -1,0 +1,126 @@
+/* APP-Server 接口定义 */
+/*  务·必·及·时·更·新  */
+
+======= uuid 接口 =======
+GET 请求：/ios/uuid
+{
+    uuid: XXXX
+}
+JSON 返回：
+{
+    errcode: 'normal'/'err'
+}
+
+
+======= channels 接口 ======= 
+GET 请求：/list?
+{
+    channel: XXXX
+    type: 'refresh'/'loadmore'
+    last_id: XXXX (when loadmore)
+    post_time: XXXX
+}
+JSON 返回：
+{
+    errcode: 'normal'/'err'
+    channel: XXXX
+    data: [{
+        _id: XXXX
+        title: XXXX
+        picBig: XXXX
+        picSmall: XXXX
+        pageView: number
+    }]
+}
+
+
+======= article 接口 =======
+GET 请求：/article?
+{
+    article_id: XXXX
+}
+HTML 返回
+
+
+
+======= article评论数 接口 =======
+GET 请求：/article/other?
+{
+    article_id: XXXX
+}
+JSON 返回：
+{
+    errcode: 'normal'/'err'
+    articleID: XXXX
+    commentNum: number
+}
+
+
+
+======= 点赞接口 =======
+GET 请求：/article/praise?
+{
+    article_id: XXXX
+}
+JSON 返回：
+{
+    errcode: 'normal'/'err'
+    articleID: XXXX
+}
+
+
+
+======= comments 接口 =======
+GET 请求：/comment?
+{
+    article_id: XXXX
+    type:' refresh'/'loadmore'
+    last_id: XXXX (when loadmore)
+}
+JSON 返回：
+{
+    errcode: 'err'/'normal'
+    articleID: XXXX
+    data: [{
+        _id: XXXX
+        nickname: XXXX
+        createTime: XXXX
+        text: XXXX
+    }]
+}
+
+
+======= write comment 接口 =======
+GET 请求：/comment/write_comment?
+{
+    article_id: XXXX
+    nickname: XXXX
+    text: XXXX
+    uuid: XXXX
+}
+JSON 返回：
+{
+    errcode: 'normal'/'err'
+}
+
+
+======= config 接口 =======
+GET 请求：/config?
+{
+    update_time:'2016-01-01'
+}
+JSON 返回：
+{
+    errcode:'normal'/'err'
+    update:'yes'/'no'
+    config:{
+        updateTime:'2016-01-01'
+        channels:[]
+    }
+}
+
+
+
+
+
+

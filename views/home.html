@@ -1,0 +1,199 @@
+<% include header.html %>
+
+<div>
+    <p>⭐️text only⭐️</p>
+    <input type="text" id="text_publish" value=""/>
+    <a id="submit_text_news">publish</a>
+</div>
+
+<div>
+    <p>⭐️link⭐️</p>
+    <input type="text" id="link" value="输入链接地址"/>
+    <a id="submit_link">get_link</a>
+    <div id="outside_content">
+        <h2><a></a></h2>
+        <p></p>
+        <img src=""/>
+    </div>
+
+    <input type="text" id="link_publish" value=""/>
+    <a id="submit_link_news">publish</a>
+</div>
+
+<!-- 内容列表 -->
+<div class="news_list">
+    <p>&nbsp</p>
+    <p>新闻列表:</p>
+    <p>&nbsp</p>
+
+    <!-- 循环模板哦 -->
+    <% newsList.forEach(function(news){ %>
+        <p>
+            <a>
+                <%- news.user.nickname %>
+            </a>
+            <%- news.createTime %>
+        </p>
+        <p>
+            <%- news.myword %>
+        </p>
+        <p>
+            <h2><a href="<%- news.link.originURL%>"><%- news.link.title %></a></h2>
+            <p><%- news.link.text %></p>
+            <img src="<%- news.link.img %>" />
+        </p>
+        <p>
+            <a>赞同：<%- news.upvote %></a> &nbsp | &nbsp 
+            <a>反对：<%- news.downvote %></a>  &nbsp | &nbsp 
+            <a href="/news/<%- news.newsid %>">回复</a>
+        </p>
+        <p>&nbsp</p>
+    <% }) %>
+</div>
+
+<!-- 分页控件 -->
+<div id="pages">
+    <p>
+        <!-- 上一页 -->
+        <% if (page >= 2) { %>
+            <a href="/?page=<%- page-2 %>">前页</a>
+            &nbsp&nbsp
+        <% } %>
+
+        <!-- 总页码的前两个 -->
+        <% if (page >= 6) { %>
+            <a href="/?page=0">1</a>
+            &nbsp
+            <a href="/?page=1">2</a>
+            &nbsp
+            ...
+            &nbsp
+        <% } %>
+
+        <!-- 当前页码的前两个 -->
+        <% if (page >= 6) { %>
+            <a href="/?page=<%- page-3 %>"><%- page-2 %></a>
+            &nbsp
+            <a href="/?page=<%- page-2 %>"><%- page-1 %></a>
+            &nbsp
+        <% } %>
+
+        <!-- 页码少于5时，罗列当前页码之前的所有页码 -->
+        <% if (page > 1 && page <= 5) { %>
+            <a href="/?page=0">1</a>
+            &nbsp
+        <% } %>
+        <% if (page > 2 && page <= 5) { %>
+            <a href="/?page=1">2</a>
+            &nbsp
+        <% } %>
+        <% if (page > 3 && page <= 5) { %>
+            <a href="/?page=2">3</a>
+            &nbsp
+        <% } %>
+        <% if (page > 4 && page <= 5) { %>
+            <a href="/?page=3">4</a>
+            &nbsp
+        <% } %>
+
+        <!-- 当前页码 -->
+        <%- page %>
+        &nbsp
+
+        <!-- 当前页码的后5个 -->
+        <a href="/?page=<%- page %>"><%- page+1 %></a>
+        &nbsp
+        <a href="/?page=<%- page+1 %>"><%- page+2 %></a>
+        &nbsp
+        <a href="/?page=<%- page+2 %>"><%- page+3 %></a>
+        &nbsp
+        <a href="/?page=<%- page+3 %>"><%- page+4 %></a>
+        &nbsp
+        <a href="/?page=<%- page+4 %>"><%- page+5 %></a>
+        &nbsp&nbsp
+
+        <!-- 下一页 -->
+        <a href="/?page=<%- page %>">后页</a>
+    </p>
+</div>
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+    submitOutsideLink();                // 提交外链
+    submitLinkNews();                   // 发布带链接的新闻
+    submitTextNews();                   // 发布纯文本的新闻
+});
+
+// 提交外链
+function submitOutsideLink(){
+    $('a[id="submit_link"]').click(function(){
+        // 获取要提交的链接
+        var link = $('input[id="link"]').val();
+        alert('将要提交的外链' + link);
+
+        // 将链接发送给后台
+        var data = {
+            link: link
+        };
+        $.ajax({
+            url: 'visit_link',
+            data: data,
+            success: function (data, status) {
+                alert(status);
+                $('div[id="outside_content"] a').text(data.title);
+                $('div[id="outside_content"] a').attr("href", data.originURL);
+                $('div[id="outside_content"] p').text(data.text);
+                $('div[id="outside_content"] img').attr("src", data.img);
+            }
+        });
+    });
+}
+
+
+function submitLinkNews () {
+    $('a[id="submit_link_news"]').click(function(){
+        var data= {
+            outside: {                      // 外链的内容
+                originURL:   $('div[id="outside_content"] a').attr("href"),
+                title:       $('div[id="outside_content"] a').text(),
+                text:        $('div[id="outside_content"] p').text(),
+                img:         $('div[id="outside_content"] img').attr("src")
+            },
+            text: $('input[id="link_publish"]').val()
+        };
+        alert(data.outside.img);
+        ajax_get('/publish', data);
+    });
+}
+
+
+function submitTextNews () {
+    $('a[id="submit_text_news"]').click(function(){
+        var data = {};
+        data.text = $('input[id="text_publish"]').val();
+        ajax_get('/publish', data);
+    });
+}
+
+
+
+// // 通用 ajax get 方法
+// function ajax_get (url, data) {
+//     // url 只需 host 之后的部分
+//     // data 是 json 格式
+//     $.ajax({
+//         url: url,
+//         data: data,
+//         success: function (data, status) {
+//             alert(status);
+//             alert(data);
+//         }
+//     });
+// }
+
+</script>
+
+<% include footer.html %>
+

@@ -1,0 +1,227 @@
+
+/*公共*/
+*{
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+}
+body {
+  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: rgb(85, 85, 85);
+  background-color: #F7F7F7;
+}
+a {
+  color: #4fabd6;
+  text-decoration:none;
+  cursor:pointer;
+}
+#contain{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* 头图 */
+#headpic {
+    /*width: 320px;*/
+    /*height: 200px;*/
+    position: relative;
+}
+#headpic img {
+    /*width: 320px;*/
+    height: 200px;
+    object-fit: cover;  /*居中裁切*/
+}
+#headpic #title {
+    position: absolute;
+    left:0px;
+    top:136px;
+    background-image: url(/../images/black_bottom.png);
+    background-repeat: repeat-x;
+    display: block;
+    height: 64px;
+    /*width: 320px;*/
+}
+#headpic #title p {
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 40px;
+    line-height: 20px;
+    overflow: hidden;
+    text-shadow:1px 1px 1px #494949;
+}
+
+/* 标题 */
+#article_title p {
+    color: #494949;
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    /*height: 44px;*/
+    line-height: 23px;
+    overflow: hidden;
+}
+
+/* 作者 */
+#author {
+    margin-top: 20px;
+    position: relative;
+}
+#author img {
+    width: 30px;
+    height: 30px;
+    border-radius:50px;
+    object-fit: cover;  /*居中裁切*/
+    position: absolute;
+    left: 15px;
+}
+#author #name {
+    color: #7B7B7B;
+    font-size: 12px;
+    margin-left: 55px;
+}
+#author #post_time {
+    color: #9F9F9F;
+    font-size: 10px;
+    margin-left: 55px;
+}
+
+/* 图文混排 */
+#content {
+    /*width: 320px;*/
+    margin-top: 30px;
+}
+#content p {
+    color: #494949;
+    font-size: 16px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 10px;
+}
+/*#content img {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}*/
+
+/* 分享 */
+
+/* 相关文章 */
+#related {
+    margin-top: 40px;
+}
+#related_session {
+    color:#7B7B7B;
+    font-size: 14px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+#related .related_cell {
+    display: block;
+    position: relative;
+    /*width: 320px;*/
+    height: 82px;
+    margin-bottom: 5px;
+    background-color: white;
+}
+#related img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;  /*居中裁切*/
+    position: absolute;
+    top: 11px;
+    left: 10px;
+}
+#related .related_title {
+    color: #494949;
+    font-size: 15px;
+    margin-left: 104px;
+    margin-right: 8px;
+    padding-top: 15px;
+    height: 34px;
+    line-height: 17px;
+    overflow: hidden;
+
+}
+#related .related_hot_degree {
+    color: #B2B2B2;
+    font-size: 12px;
+    margin-left: 104px;
+    padding-top: 5px;
+}
+
+/* 免责声明 */
+#declare {
+    text-align: center;
+    font-size: 10px;
+    color: #B2B2B2;
+    margin-top: 28px;
+    margin-bottom: 12px;
+}
+
+/**/
+/*适配手机*/
+@media only screen and (max-width: 320px)  {
+    /*body {font-size:8.33333px!important}*/
+    #contain {max-width:320px}
+    #headpic {
+        width: 320px;
+        height: 200px;
+    }
+    #headpic img {
+        width: 320px;
+        height: 200px;
+    }
+    #content img {
+        width: 290px;
+    }
+}
+@media only screen and (max-width: 380px) and (min-width: 330px)  {
+    /*body {font-size:16px!important}*/
+    #contain {max-width:375px}
+    #headpic {
+        width: 375px;
+        height: 232px;
+    }
+    #headpic img {
+        width: 375px;
+        height: 232px;
+    }
+    #article_title p {
+        font-size: 23px;
+        line-height: 26px;
+    }
+    #content p {
+        font-size: 18px;
+    }
+    #content img {
+        width: 345px;
+    }
+}
+@media only screen and (max-width: 420px) and (min-width: 400px)  {
+    /*body {font-size:16px!important}*/
+    #contain {max-width:414px}
+    #headpic {
+        width: 414px;
+        height: 248px;
+    }
+    #headpic img {
+        width: 414px;
+        height: 248px;
+    }
+    #article_title p {
+        font-size: 23px;
+        line-height: 26px;
+    }
+    #content p {
+        font-size: 18px;
+    }
+    #content img {
+        width: 384px;
+    }
+}
+

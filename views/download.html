@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- seo -->
+<meta name="title" content="咸鱼腥闻">
+<meta name="keywords" content="娱乐,新闻,明星,段子,搞笑,内涵,电影,时尚">
+<meta name="description" content="好玩、有品的娱乐新闻">
+<meta name="robots" content="all">
+
+<title>咸鱼腥闻</title>
+
+<link href="/stylesheets/download_style.css" rel="stylesheet" media="screen">
+<script type="text/javascript"src="/javascripts/jquery-1.9.1.min.js"></script>
+
+</head>
+<body>
+
+<div id="contain">
+    <img src="/images/180*180.png" alt="" />
+    <h1>· 咸鱼腥闻 ·</h1>
+    <h2>好玩、有品的娱乐新闻</h2>
+    <a id="iphone_down" href="https://itunes.apple.com/us/app/xian-yu-xing-wen-hao-wan-you/id1084092765">
+        下载 iPhone 版
+    </a>
+    <p>安卓版即将开放下载</p>
+</div>
+
+<script>
+$(document).ready(function(){
+    $('#iphone_down').bind('click', function (){
+        is_weixin();
+    });
+});
+
+function is_weixin(){
+    var ua = navigator.userAgent.toLowerCase(); 
+    if (ua.match(/MicroMessenger/i)=="micromessenger") {
+        alert('腥仔提示：微信不允许跳转到AppStore。复制此页面链接，在浏览器里打开就能下载哦');
+        return true;
+    } 
+    else if (ua.match(/WeiBo/i) == "weibo") {
+        alert('腥仔提示：新浪微博不允许跳转到AppStore。复制此页面链接，在浏览器里打开就能下载哦');
+        return true;
+    }
+    else {
+        // alert('不是微信里');
+        return false;
+    }
+}
+
+/*
+if (browser.versions.mobile) {//判断是否是移动设备打开。browser代码在下面
+        var ua = navigator.userAgent.toLowerCase();//获取判断用的对象
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+                //在微信中打开
+        }
+        if (ua.match(/WeiBo/i) == "weibo") {
+                //在新浪微博客户端打开
+        }
+        if (ua.match(/QQ/i) == "qq") {
+                //在QQ空间打开
+        }
+        if (browser.versions.ios) {
+                //是否在IOS浏览器打开
+        } 
+        if(browser.versions.android){
+                //是否在安卓浏览器打开
+        }
+} else {
+        //否则就是PC浏览器打开
+}
+*/
+
+</script>
+
+</body>
+</html>

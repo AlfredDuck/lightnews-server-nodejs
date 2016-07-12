@@ -1,0 +1,210 @@
+<% include header.html %>
+
+<div class="news" title="1447555272625">
+    <h1>news：<%= newsid %></h1>
+    <p>
+        <a><%= user %></a>
+        <%= createTime %>
+    </p>
+    <p><%= myword %></p>
+    <p>
+        <a class="upvote">赞同：<%= upvote %></a> | 
+        <a class="downvote">反对：<%= downvote %></a> | 
+        <a class="reply">回复：<%= commentNum %></a>
+    <p>
+    <p>&nbsp</p>
+</div>
+
+<div class="comment">
+    <p>&nbsp</p>
+    <p>回复：</p>
+    <p>&nbsp</p>
+
+    <!-- 循环模板哦 -->
+    <% comment.forEach(function(comment){ %>
+        <p>
+            <a><%= comment.user.nickname %></a>
+            <%= comment.createTime %>
+        </p>
+        <p>
+            <a title="<%- comment.replyTo.userid %>" target="_blank">
+                @<%= comment.replyTo.nickname %>
+            </a>
+            &nbsp&nbsp<%= comment.text %>
+        </p>
+        <a class="reply_button" title="<%- comment.user.userid %>" name="<%- comment.user.nickname %>"> 回复 </a>
+    <% }) %>
+
+    <p>&nbsp</p>
+</div>
+
+<!-- 分页控件 -->
+<div id="pages">
+    <p>
+        <!-- 上一页 -->
+        <% if (page >= 2) { %>
+            <a href="/news/<%- newsid %>/?page=<%- page-2 %>">前页</a>
+            &nbsp&nbsp
+        <% } %>
+
+        <!-- 总页码的前两页 -->
+        <% if (page >= 6) { %>
+            <a href="/news/<%- newsid %>/?page=0">1</a>
+            &nbsp
+            <a href="/news/<%- newsid %>/?page=1">2</a>
+            &nbsp
+            ...
+            &nbsp
+        <% } %>
+
+        <!-- 当前页码的前两个 -->
+        <% if (page >= 6) { %>
+            <a href="/news/<%- newsid %>/?page=<%- page-3 %>"><%- page-2 %></a>
+            &nbsp
+            <a href="/news/<%- newsid %>/?page=<%- page-2 %>"><%- page-1 %></a>
+            &nbsp
+        <% } %>
+
+        <!-- 页码少于6时，罗列当前页码之前的所有页码 -->
+        <% if (page > 1 && page <= 5) { %>
+            <a href="/news/<%- newsid %>/?page=0">1</a>
+            &nbsp
+        <% } %>
+        <% if (page > 2 && page <= 5) { %>
+            <a href="/news/<%- newsid %>/?page=1">2</a>
+            &nbsp
+        <% } %>
+        <% if (page > 3 && page <= 5) { %>
+            <a href="/news/<%- newsid %>/?page=2">3</a>
+            &nbsp
+        <% } %>
+        <% if (page > 4 && page <= 5) { %>
+            <a href="/news/<%- newsid %>/?page=3">4</a>
+            &nbsp
+        <% } %>
+
+        <!-- 当前页 -->
+        <%- page %>
+        &nbsp
+
+        <!-- 页码距离最大页码小于5时，罗列当前页码之后的所有页码 -->
+        <% if (page < largestPage-3 && page > largestPage-5) { %>
+            <a href="/news/<%- newsid %>/?page=<%- largestPage-4 %>"><%- largestPage-3 %></a>
+            &nbsp
+        <% } %>
+        <% if (page < largestPage-2 && page > largestPage-5) { %>
+            <a href="/news/<%- newsid %>/?page=<%- largestPage-3 %>"><%- largestPage-2 %></a>
+            &nbsp
+        <% } %>
+        <% if (page < largestPage-1 && page > largestPage-5) { %>
+            <a href="/news/<%- newsid %>/?page=<%- largestPage-2 %>"><%- largestPage-1 %></a>
+            &nbsp
+        <% } %>
+        <% if (page < largestPage && page > largestPage-5) { %>
+            <a href="/news/<%- newsid %>/?page=<%- largestPage-1 %>"><%- largestPage %></a>
+            &nbsp
+        <% } %>
+
+        <!-- 当前页码的后两页 -->
+        <% if (page <= largestPage-5) { %>
+            <a href="/news/<%- newsid %>/?page=<%- page %>"><%- page+1 %></a>
+            &nbsp
+            <a href="/news/<%- newsid %>/?page=<%- page+1 %>"><%- page+2 %></a>
+            &nbsp
+        <% } %>
+
+        <!-- 总页码的最后两页 -->
+        <% if (page <= largestPage-5) { %>
+            ...
+            &nbsp
+            <a href="/news/<%- newsid %>/?page=<%- largestPage-2 %>"><%- largestPage-1 %></a>
+            &nbsp
+            <a href="/news/<%- newsid %>/?page=<%- largestPage-1 %>"><%- largestPage %></a>
+            &nbsp
+        <% } %>
+
+        <!-- 下一页 -->
+        <% if (page < largestPage) { %>
+        &nbsp
+        <a href="/news/<%- newsid %>/?page=<%- page %>">后页</a>
+        <% } %>
+    </p>
+    &nbsp
+</div>
+
+<form method="post" id="write_comment" action="/user/login">
+    <p id="who_to_reply"></p>
+    <input type="text" name="comment" value="我的评论"/>
+    <a id="submit">提交</a>
+</form>
+
+
+<script type="text/javascript">
+// 全局变量
+var useridToReply;               // 要回复的人的userid
+var nicknameToReply;             // 要回复的人的nickname
+
+$(document).ready(function(){
+    submitComment();                 // 提交评论
+    replyComment();                  // 回复评论
+});
+
+
+function replyComment () {
+    // 选择要回复的人
+    $('a[class="reply_button"]').click(function(){
+        useridToReply = $(this).attr('title');
+        nicknameToReply = $(this).attr('name');
+        alert(useridToReply);
+        alert(nicknameToReply);
+        $('p[id="who_to_reply"]').text('@' + nicknameToReply + ' X').click(function(){
+            alert('取消@');
+            useridToReply = null;
+            nicknameToReply = null;
+            $(this).text('');
+        });
+    });
+}
+
+
+function submitComment () {
+    $('a[id="submit"]').click(function(){
+        var data = {};
+        data.newsid = <%- newsid %>;
+        data.text = $('input[name="comment"]').val();
+        if (useridToReply) {
+            data.isReply = 'yes';
+            data.replyTo = {
+                userid: useridToReply,
+                nickname: nicknameToReply
+            };
+        } 
+        else {
+            data.isReply = 'no';
+            data.replyTo = {
+                userid: '',
+                nickname: ''
+            };
+        }
+        ajax_get('/write_comment', data);
+    });
+}
+
+
+// // 通用 ajax get 方法
+// function ajax_get (url, data) {
+//     // url 只需 host 之后的部分
+//     // data 是 json 格式
+//     $.ajax({
+//         url: url,
+//         data: data,
+//         success: function (data, status) {
+//             alert(status);
+//             alert(data);
+//         }
+//     });
+// }
+
+</script>
+
+<% include footer.html %>
