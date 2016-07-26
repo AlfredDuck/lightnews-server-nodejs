@@ -67,6 +67,7 @@ app.get('/discover/latest_topics',             discover.latestTopics);
 // 话题详情页接口
 app.get('/topic/topic_info',                   topic.topicInfo);
 app.get('/topic/articles',                     topic.articlesOfTopic);
+app.get('/topic/follow',                       topic.followOneTopic);
 // 我的话题接口
 app.get('/index/my_topics',                    index.myTopics);
 // 登录接口

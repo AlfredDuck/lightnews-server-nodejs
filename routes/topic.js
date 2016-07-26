@@ -108,8 +108,28 @@ exports.followOneTopic = function (req, res) {
         data: {}
     };
 
-    // 查询用户关注列表中是否有此 Topic，若没有，则增加一条 Topic；若有，则返回已关注
-    mongoUser.findOne
+    mongoUser.update(
+        {'weiboUser.weiboID': req.query.uid},  // 查询项
+        {$addToSet:{followedTopics: req.query.topic}},  // 修改项，数组插入（不重复插入）
+        {safe: true, multi: true},  // 设置项
+        function (err, num) {
+            if (err) {
+                console.log(err);
+                json.errcode = 'err';
+                res.send(json);
+            } else {
+                console.log('修改' + num + '条记录');
+                if (num == 0) {
+                    // 未查询成功
+                    json.errcode = 'err';
+                    res.send(json);
+                } else {
+                    res.send(json);
+                }
+
+            }
+        }
+    );
 };
 
 
