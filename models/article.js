@@ -11,6 +11,7 @@ var articleSchema = new Schema({
         pic: String,                // 作者头像
         authorID: String            // 作者id
     },
+    topic: Array,                   // 所属话题
     resource: String,               // 来源（比如：toutiao.com)
     originalLink: String,           // 文章原始链接
     picAndText: String,             // 图文混排

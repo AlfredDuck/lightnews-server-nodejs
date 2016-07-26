@@ -11,6 +11,7 @@ var path = require('path');
 var ejs = require('ejs');
 
 /* 自定义模块 */
+// 旧模块
 var config               = require('./routes/config.js');
 var logs                 = require('./routes/logs.js');
 var channels             = require('./routes/channels.js');
@@ -18,6 +19,11 @@ var article              = require('./routes/article.js');
 var comment              = require('./routes/comment.js');
 var data                 = require('./routes/data.js');
 var article_share        = require('./routes/article_share.js');
+// 重新定义的模块
+var index                = require('./routes/index.js');
+var discover             = require('./routes/discover.js');
+var user                 = require('./routes/user.js');
+var topic                = require('./routes/topic.js');
 
 var app = express();
 
@@ -50,7 +56,26 @@ if ('development' == app.get('env')) {
 // app.get('/comment/loadmore',                   app_server.commentLoadMore);
 // app.get('/comment/write_comment',              app_server.writeComment);
 
-// APP接口
+/** APP接口 **/
+// 首页接口
+app.get('/index/hots',                 index.hots);
+app.get('/index/followed_articles',            index.followedArticles);
+// 发现页接口
+app.get('/discover/all_classifications',       discover.classifications);
+app.get('/discover/classification',            discover.oneClassification);
+app.get('/discover/latest_topics',             discover.latestTopics);
+// 话题详情页接口
+app.get('/topic/topic_info',                   topic.topicInfo);
+app.get('/topic/articles',                     topic.articlesOfTopic);
+// 我的话题接口
+app.get('/index/my_topics',                    index.myTopics);
+// 登录接口
+app.get('/user/weibo_login',                   user.weiboLogin);
+// 用户反馈接口
+app.get('/user/customer_feedback',             user.customerFeedback);
+
+
+//
 app.get('/config',                             config.appConfig);
 app.get('/ios/uuid',                           logs.iosUUID);
 
@@ -89,3 +114,4 @@ module.exports = app;
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
