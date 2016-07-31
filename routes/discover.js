@@ -6,6 +6,7 @@
 /* 依赖的数据模块 */
 var mongoUser             = require('./../models/user.js');
 var mongoTopic            = require('./../models/topic.js');
+var mongofollowedTopic    = require('./../models/followedTopic.js');
 
 
 /** 全部分类 接口 **/
@@ -59,7 +60,8 @@ exports.classifications = function (req, res) {
 
 
 
-/** 单个分类的话题列表 接口 **/
+/** =================== 单个分类的话题列表 接口 ================= **/
+
 exports.oneClassification = function(req, res){
     console.log(req.query);
 
@@ -84,6 +86,7 @@ exports.oneClassification = function(req, res){
         limit: 20
     };
 
+    // 查询出 Topic 列表
     mongoTopic.find(query, null, option, function(err, docs){
         if (err) { console.log(err);}
         if (docs.length == 0){
@@ -92,15 +95,63 @@ exports.oneClassification = function(req, res){
             res.send(json);
         }
         else {
-            json.data = docs;
-            res.send(json);
+
+            for (var i=0; i<docs.length; i++) {
+                var item = {
+                    _id: docs[i]._id,
+                    title: docs[i].title,
+                    introduction: docs[i].introduction,
+                    portrait: docs[i].portrait,
+                    isFollowing: 'no'
+                };
+                json.data.push(item);
+            };
+            //console.log(json.data);
+
+            if (req.query.uid) {
+                console.log(1);
+                checkIfFollowed(req,res,json);  // 检查关注关系
+            } else {
+                res.send(json);
+            }
         }
     });
 };
 
 
+function checkIfFollowed(req, res, json){
+    // 查询当前用户的 follow list
+    mongofollowedTopic.find({uid: req.query.uid} ,function(err, docs){
+        if (err || !docs) {
+            console.log(err);
+            res.send(json);  // 查询不到用户就直接返回正常的列表
+        } else if (docs.length == 0) {
+            console.log('find no follow relation');
+            res.send(json);  // 查询不到用户就直接返回正常的列表
+        } else {
+            // 比对关注关系
+            var classList = json.data;
+            var followList = docs;
+            for (var i=0; i<classList.length; i++) {
+                for (var j=0; j<followList.length; j++) {
+                    // 如果
+                    if (classList[i].title == followList[j].title) {
+                        console.log(33333333);
+                        classList[i].isFollowing = 'yes';
+                    }
+                }
+            }
+            //console.log(classList);
+            json.data = classList;
+            res.send(json);
+        }
+    });
+}
 
-/** 最新话题 接口 **/
+
+
+/** ======================== 最新话题 接口 ======================== **/
+
 exports.latestTopics = function (req, res) {
     console.log(req.query);
 

@@ -58,20 +58,27 @@ if ('development' == app.get('env')) {
 
 /** APP接口 **/
 // 首页接口
-app.get('/index/hots',                 index.hots);
+app.get('/index/hots',                         index.hots);
 app.get('/index/followed_articles',            index.followedArticles);
+
 // 发现页接口
 app.get('/discover/all_classifications',       discover.classifications);
 app.get('/discover/classification',            discover.oneClassification);
 app.get('/discover/latest_topics',             discover.latestTopics);
+
 // 话题详情页接口
 app.get('/topic/topic_info',                   topic.topicInfo);
 app.get('/topic/articles',                     topic.articlesOfTopic);
 app.get('/topic/follow',                       topic.followOneTopic);
+app.get('/topic/unfollow',                     topic.cancelFollow);
+app.get('/topic/push',                         topic.pushStatus);
+
 // 我的话题接口
-app.get('/index/my_topics',                    index.myTopics);
+app.get('/user/my_topics',                     user.myTopics);
+
 // 登录接口
 app.get('/user/weibo_login',                   user.weiboLogin);
+
 // 用户反馈接口
 app.get('/user/customer_feedback',             user.customerFeedback);
 

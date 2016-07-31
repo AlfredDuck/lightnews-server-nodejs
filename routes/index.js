@@ -6,9 +6,18 @@
 /* 依赖的数据模块 */
 var mongoTopic            = require('./../models/topic.js');
 var mongoArticle          = require('./../models/article.js');
+var mongoFollowedTopic    = require('./../models/followedTopic.js');
 
 
-/* 热门文章 & 热门话题 接口 */
+
+
+
+
+
+
+
+/** ====================== 热门文章 & 热门话题 接口 ======================= */
+
 exports.hots = function(req, res){
     console.log(req.query);
 
@@ -61,117 +70,113 @@ exports.hots = function(req, res){
             });
         }
     });
-
-    // var item1 = {
-    //     picURL:'https://img3.doubanio.com/view/dianpu_product_item/large/public/p427973.jpg',
-    //     article_id:'1234567890',
-    //     title:'001《再次寻找周杰伦》是瑞琦对偶像周杰伦的一种致敬'
-    // };
 };
 
 
 
-/* 关注的话题下的最新文章 */
+
+
+
+
+
+
+
+
+
+/* ======================= 关注的话题下的最新文章 ======================= */
+
 exports.followedArticles = function(req, res){
+    console.log('关注的话题下的文章：' );
     console.log(req.query);
 
     var json = {
         errcode: 'normal',
         data:[]
     };
+    
+    if (req.query.uid) {
+        // 若当前用户已登录，则加载其关注的话题
+        loadFollowedTopic(req,res,json);
+    } else {
+        // 若当前用户未登录，则加载默认话题下
+        res.send(json);
+    }
+};
 
-    mongoArticle.find({}, {}, {limit:10}, function(err, docs){
-        if (err) {console.log(err);}
-        if (!docs || docs.length == 0) {
-            console.log('find nothing');
+function loadFollowedTopic(req, res, json){
+    // 查询我关注的话题
+    mongoFollowedTopic.find({uid: req.query.uid}, function(err, docs){
+        if (err || !docs) {
+            console.log(err);
             json.errcode = 'err';
             res.send(json);
-        }
-        else {
-            // 组合数据
-            for (var i=0; i<docs.length; i++) {
-                var item = {
-                    _id: docs[i]._id,
-                    picURL: docs[i].picSmall,
-                    topic: req.query.topic,
-                    title: docs[i].title,
-                    hotScore:'评论' + 23 + ' 点赞' + 94,
-                    date: docs[i].postTime
-                };
-                json.data.push(item);
-            };
+        } else if (docs.length == 0){
+            console.log('find no followed topics');
             res.send(json);
+        } else {
+            console.log('我关注的话题有：');
+            var topicArr = [];
+            for (var i=0; i<docs.length; i++) {
+                topicArr.push(docs[i].title);
+            }
+            console.log(topicArr);
+            loadFollowedArticle(req,res,json,topicArr);  // 查询文章
         }
     });
+}
 
-    // var item = {
-    //     picURL:'https://img3.doubanio.com/view/photo/albumicon/public/p730135166.jpg',
-    //     topic:'#金瓶梅的话语#',
-    //     topicImageURL:'https://img3.doubanio.com/view/photo/albumicon/public/p802360792.jpg',
-    //     title:'夏帆是日本清纯派明星的代表人物，她纤婉出尘，具有少见的透明感，是标准的美少女\n',
-    //     hotScore:'评论23 点赞94'
-    // };
-};
+function loadFollowedArticle(req,res,json,topicArr){
+    // 查询话题对应的文章
+    mongoArticle.find({topic:{$in: topicArr}}, function(err, docs){
+        if (err || !docs) {
+            console.log(err);
+            json.errcode = 'err';
+            res.send(json);
+        } else if (docs.length == 0) {
+            console.log('find no aritcles');
+            res.send(json);
+        } else {
+            console.log('文章：');
+            // console.log(docs);
 
+            // 查询 Topic 图片
+            mongoTopic.find({title:{$in: topicArr}}, function(err,topicDocs){
+                console.log('topic and pics');
+                topicArr = topicDocs;
+                console.log(topicArr);
 
+                // 组合要返回的数据
+                for (var i=0; i<docs.length; i++){
+                    var oneArticle = docs[i];
+                    var oneTopic = '';
 
-// ============================ 发现页面 =================================
+                    // 检查文章下的Topics中，哪个需要显示在文章里
+                    for (var j=0; j<oneArticle.topic.length; j++){
+                        for (var k=0; k<topicArr.length; k++){
+                            // 比较 两个Topic是否相同
+                            if (oneArticle.topic[j] == topicArr[k].title){
+                                oneTopic = topicArr[k];
+                            }
+                        }
+                    }
 
-
-
-// ===================== “我的”页面 ======================
-/* 新浪微博登录 */
-/*
- * 新浪昵称、新浪id、头像url
- */
-exports.weiboLogin = function (req, res){
-    console.log(req.query);
-    var json = {
-        errcode: 'normal',
-        data: req.query
-    };
-    res.send(json);
-};
-
-
-/* 用户反馈 接口 */
-exports.customerFeedback = function(req, res) {
-    console.log(req.query);
-    var json = {
-        errcode: 'normal',
-        data: ''
-    };
-    res.send(json);
-};
-
-
-/* 我的话题list 接口 */
-exports.myTopics = function(req, res){
-    console.log(req.query);
-        var json = {
-        errcode: 'normal',
-        data: []
-    };
-
-    var item = {
-        picURL:'https://img3.doubanio.com/view/photo/thumb/public/p802360792.jpg',
-        title:'#夏帆moron#',
-        updateTime:'更新于 2016年4月22日',
-        isNotificationOn:'yes'
-    };
-
-    for (var i = 20; i >= 0; i--) {
-        json.data.push(item);
-    }
-    res.send(json);
-};
-
-
-
-// ========================= 话题详情页 ===========================
-
-
-
+                    var item = {
+                        _id: oneArticle._id,
+                        picURL: oneArticle.picSmall,
+                        topic: oneTopic.title,
+                        topicImageURL: oneTopic.portrait,
+                        title: oneArticle.title,
+                        hotScore:'评论' + 23 + ' 点赞' + 94,
+                        date: oneArticle.postTime
+                    };
+                    json.data.push(item);
+                };
+                //console.log(json);
+                res.send(json); 
+            });
+        }
+    });
+}
 
 
 

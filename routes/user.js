@@ -6,9 +6,11 @@ var md5 = require('md5');
 /* 依赖的数据模块 */
 var mongoUser             = require('./../models/user.js');
 var mongoCFB              = require('./../models/customerFeedback.js');
+var mongoTopic            = require('./../models/topic.js');
+var mongoFollowedTopic    = require('./../models/followedTopic.js');
 
 
-/** 新浪微博登录 **/
+/** ================= 新浪微博登录 ================ **/
 /*
  * query包含：nickname, uid, portrait_url
  */
@@ -66,7 +68,9 @@ function weiboLoginSendBack(req, res, json, doc) {
 
 
 
-/** 用户反馈 **/
+
+
+/** ========================= 用户反馈 ========================== **/
 /*
  * query包含：user_type, uid, content, device_type, device_id
  */
@@ -95,6 +99,45 @@ exports.customerFeedback = function (req, res) {
             res.send(json);
         }
     });
+};
+
+
+
+
+
+
+/** =================== 我关注的topics 接口 =================== **/
+
+exports.myTopics = function(req, res){
+    console.log(req.query);
+
+    var json = {
+        errcode: 'normal',
+        data: []
+    };
+
+    mongoFollowedTopic.find({uid: req.query.uid}, function(err, docs){
+        if (err || !docs) {
+            console.log(err);
+            json.errcode = 'err';
+            res.send(json);
+        } else if (docs.length == 0) {
+            console.log('no followedTopics now');  // 还没有关注过 topic
+            res.send(json);
+        } else {
+            console.log(docs);
+            json.data = docs;
+            res.send(json);
+        }
+
+    });
+
+    // var item = {
+    //     picURL:'https://img3.doubanio.com/view/photo/thumb/public/p802360792.jpg',
+    //     title:'#夏帆moron#',
+    //     updateTime:'更新于 2016年4月22日',
+    //     isNotificationOn:'yes'
+    // };
 };
 
 
