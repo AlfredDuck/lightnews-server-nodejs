@@ -95,7 +95,6 @@ exports.oneClassification = function(req, res){
             res.send(json);
         }
         else {
-
             for (var i=0; i<docs.length; i++) {
                 var item = {
                     _id: docs[i]._id,
@@ -176,15 +175,34 @@ exports.latestTopics = function (req, res) {
     };
 
     mongoTopic.find(query, null, option, function(err, docs){
-        if (err) { console.log(err);}
-        if (docs.length == 0){
-            console.log('find nothing');
+        if (err) {
+            console.log(err);
             json.errcode = 'err';
             res.send(json);
         }
-        else {
-            json.data = docs;
+        if (docs.length == 0){
+            console.log('find nothing');
             res.send(json);
+        }
+        else {
+            for (var i=0; i<docs.length; i++) {
+                var item = {
+                    _id: docs[i]._id,
+                    title: docs[i].title,
+                    introduction: docs[i].introduction,
+                    portrait: docs[i].portrait,
+                    isFollowing: 'no'
+                };
+                json.data.push(item);
+            };
+            //console.log(json.data);
+
+            if (req.query.uid) {
+                console.log(1);
+                checkIfFollowed(req,res,json);  // 检查关注关系
+            } else {
+                res.send(json);
+            }
         }
     });
 

@@ -48,7 +48,7 @@ exports.hots = function(req, res){
             };
 
             // 查询 Article
-            mongoArticle.find({},{}, {limit:5}, function(err, docs2){
+            mongoArticle.find({},{}, {limit:8}, function(err, docs2){
                 if (err) {console.log(err);}
                 if (!docs2 || docs2.length == 0) {
                     console.log('find nothing');
@@ -57,7 +57,7 @@ exports.hots = function(req, res){
                 }
                 else {
                     // 组合数据
-                    for (var i=0; i<docs1.length; i++) {
+                    for (var i=0; i<docs2.length; i++) {
                         var item = {
                             picURL: docs2[i].picSmall,
                             title: docs2[i].title,
@@ -125,15 +125,31 @@ function loadFollowedTopic(req, res, json){
     });
 }
 
+
+
 function loadFollowedArticle(req,res,json,topicArr){
+    // 查询条件
+    var query = {
+        topic:{$in: topicArr}
+    };
+    if (req.query.type == 'loadmore' && req.query.last_id) {  // 请求类型为 加载更多
+        query._id = {$lt: req.query.last_id};
+    }
+
+    var option = {
+        sort:{_id:-1},
+        limit: 20
+    };
+
     // 查询话题对应的文章
-    mongoArticle.find({topic:{$in: topicArr}}, function(err, docs){
+    mongoArticle.find(query, null, option, function(err, docs){
         if (err || !docs) {
             console.log(err);
             json.errcode = 'err';
             res.send(json);
         } else if (docs.length == 0) {
             console.log('find no aritcles');
+            console.log(json);
             res.send(json);
         } else {
             console.log('文章：');

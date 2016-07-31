@@ -110,13 +110,25 @@ exports.customerFeedback = function (req, res) {
 
 exports.myTopics = function(req, res){
     console.log(req.query);
-
     var json = {
         errcode: 'normal',
         data: []
     };
 
-    mongoFollowedTopic.find({uid: req.query.uid}, function(err, docs){
+    // 查询条件
+    var query = {
+        uid: req.query.uid
+    };
+    if (req.query.type == 'loadmore' && req.query.last_id) {  // 请求类型为 加载更多
+        query._id = {$lt: req.query.last_id};
+    }
+
+    var option = {
+        sort:{_id:-1},
+        limit: 20
+    };
+
+    mongoFollowedTopic.find(query, null, option, function(err, docs){
         if (err || !docs) {
             console.log(err);
             json.errcode = 'err';
