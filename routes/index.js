@@ -48,7 +48,7 @@ exports.hots = function(req, res){
             };
 
             // 查询 Article
-            mongoArticle.find({},{}, {limit:8}, function(err, docs2){
+            mongoArticle.find({},{}, {limit:2}, function(err, docs2){
                 if (err) {console.log(err);}
                 if (!docs2 || docs2.length == 0) {
                     console.log('find nothing');
@@ -182,7 +182,7 @@ function loadFollowedArticle(req,res,json,topicArr){
                         topic: oneTopic.title,
                         topicImageURL: oneTopic.portrait,
                         title: oneArticle.title,
-                        hotScore:'评论' + 23 + ' 点赞' + 94,
+                        hotScore:'评论' + oneArticle.commentNum + ' 点赞' + oneArticle.praiseNum,
                         date: oneArticle.postTime
                     };
                     json.data.push(item);
